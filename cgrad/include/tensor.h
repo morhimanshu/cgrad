@@ -1,10 +1,11 @@
-#ifndef Tensor_h
-#define Tensor_h
+#ifndef TENSOR_H
+#define TENSOR_H
 
-#pragma once
+typedef struct Tensor {
+  int *shape;
+  double *data;
+} Tensor;
 
-typedef struct Tensor Tensor;
+Tensor CGTensorZeros(int count, ...);
 
-Tensor *add(int count, ...){}
-
-#endif /*Tensor_h*/
+#endif /* TENSOR_H */

@@ -1,36 +1,35 @@
-#include <stdio.h>
 #include <stdarg.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "tensor.h"
 
-typedef struct tensor{
-    int size;
-    double* data;
+Tensor CGTensorZeros(int dim, ...) {
+  Tensor t;
+  va_list args;
+  size_t total = 1;
+  int i;
 
-    Tensor *(*add)(Tensor *self, const Tensor *other, ...);
-} Tensor;
+  t.shape = NULL;
+  t.data = NULL;
 
-Tensor *add(int count, Tensor *self, const Tensor *other, ...) {
-    /*
-    Need to pass the count of numbers to add. TODO: hack this
-    */
+  if (dim <= 0) {
+    printf("Please provide the dimension of the tensor.");
+    return t;
+  }
 
-    if (self->size != other->size){
-        return NULL;
- 
-    int result; 
+  t.shape = malloc((size_t)dim * sizeof(int));
+  if (t.shape == NULL) {
+    return t;
+  }
 
-    va_list argv;
-    va_start(argv, count);
+  va_start(args, dim);
+  for (i = 0; i < dim; i++) {
+    t.shape[i] = va_arg(args, int);
+    total *= (size_t)t.shape[i];
+  }
+  va_end(args);
 
-    int argc = va_arg(argv, int);
-    for(int i = 0; i < argc; i++){
-        result += va_arg(argv, double);
-    }
-
-    vs_end(argv);
-
-    if (self->size != other->size){
-        return NULL;
-    }
-
-    return self;
+  t.data = calloc(total, sizeof(double));
+  return t;
 }
